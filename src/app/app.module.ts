@@ -27,9 +27,16 @@ import { AdminProductsComponent } from './admin/admin-products/admin-products.co
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
+import { ProductService } from './product.service';
 import { AuthGuard } from './auth-guard.service';
 import { UserService } from './user.service';
+import { CategoryService } from './category.service';
 import { AdminAuthGuard } from './admin-auth-guard.service';
+import { ProductFormComponent } from './admin/product-form/product-form.component';
+import { FormsModule } from '@angular/forms';
+import { CustomFormsModule } from 'ng2-validation';
+
+
 
 @NgModule({
   declarations: [
@@ -43,9 +50,12 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
     MyOrdersComponent,
     AdminProductsComponent,
     AdminOrdersComponent,
+    ProductFormComponent,
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    CustomFormsModule,
     // AngularFireModule.initializeApp(environment.firebase),
     // AngularFireDatabaseModule,
     // AngularFireAuthModule,
@@ -80,14 +90,30 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
         canActivate: [AuthGuard, AdminAuthGuard],
       },
       {
+        path: 'admin/products/new',
+        component: ProductFormComponent,
+        canActivate: [AuthGuard, AdminAuthGuard],
+      },
+      {
+        path: 'admin/products/:id',
+        component: ProductFormComponent,
+        canActivate: [AuthGuard, AdminAuthGuard],
+      },
+      {
         path: 'admin/products',
         component: AdminProductsComponent,
-        canActivate: [AuthGuard, AdminAuthGuard]
+        canActivate: [AuthGuard, AdminAuthGuard],
       },
-      
     ]),
   ],
-  providers: [AuthService, AuthGuard, UserService, AdminAuthGuard],
+  providers: [
+    AuthService,
+    AuthGuard,
+    AdminAuthGuard,
+    UserService,
+    CategoryService,
+    ProductService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

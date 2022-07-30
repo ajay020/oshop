@@ -24,7 +24,7 @@ export class UserService {
     return from (getDoc(doc(this.firestore,"users", uid))).pipe(
         map(docSnapshot => {
             let userdata = docSnapshot.data()
-            console.log(userdata);
+            // console.log(userdata);
 
             user = {name: userdata?.['name'], email: userdata?.['email'], isAdmin: userdata?.['isAdmin'] };
             return user;
