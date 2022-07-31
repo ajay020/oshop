@@ -12,7 +12,7 @@ export class CategoryService {
   constructor(private firestore: Firestore) { 
   }
 
-  getCategories(){
+  getAll(){
      let categories :any[] = [];
      const collRef =  collection(this.firestore, "categories");
      const q  = query(collRef, orderBy('name', 'asc'))

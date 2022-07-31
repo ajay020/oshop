@@ -16,22 +16,42 @@ export class ProductService {
   }
 
   getAll(){
-    let products :Product[] = [] ;
-    getDocs(collection(this.firestore, 'products'))
-        .then( (querySnapshot:QuerySnapshot )=>{
-            querySnapshot.forEach( (snapshot) => {
-                let d = snapshot.data();
-                products.push({
-                         $key: snapshot.id,
-                         title:d?.['title'],
-                         price:d?.['price'],
-                         category: d?.['category'],
-                         imageUrl: d?.['imageUrl'] 
-                    });
-                // console.log(snapshot.id, snapshot.data());
-            });
-        });
-    return of (products);
+    // let products :Product[] = [] ;
+    // getDocs(collection(this.firestore, 'products'))
+    //     .then( (querySnapshot:QuerySnapshot )=>{
+    //         querySnapshot.forEach( (snapshot) => {
+    //             let d = snapshot.data();
+    //             products.push({
+    //                      $key: snapshot.id,
+    //                      title:d?.['title'],
+    //                      price:d?.['price'],
+    //                      category: d?.['category'],
+    //                      imageUrl: d?.['imageUrl'] 
+    //                 });
+    //         });
+    //     });
+    // console.log(products);
+    // return of (products);
+
+
+    return from (getDocs(collection(this.firestore, 'products')))
+            .pipe(
+                map(qss => {
+                    let p :Product[] = [];
+                    qss.forEach(shot =>{
+                        let d = shot.data();
+                        p.push({
+                            $key: shot.id,
+                            title:d?.['title'],
+                            price:d?.['price'],
+                            category: d?.['category'],
+                            imageUrl: d?.['imageUrl'] 
+                        })
+                    })
+                    return p;
+                })
+            )
+
   }
 
   get(productId:string){
