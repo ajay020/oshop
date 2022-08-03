@@ -3,18 +3,37 @@ import { Auth, signOut, authState} from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { AuthService } from './../auth.service';
 import { AppUser } from './../models/app-user';
+import { ShoppingCartService } from './../shopping-cart.service';
+import { onSnapshot } from '@angular/fire/firestore';
+import { ShoppingCartItem } from './../models/shopping-cart-item';
+import { ShoppingCart } from '../models/shopping-cart';
 
 @Component({
   selector: 'bs-navbar',
   templateUrl: './bs-navbar.component.html',
   styleUrls: ['./bs-navbar.component.css']
 })
-export class BsNavbarComponent {
+export class BsNavbarComponent implements OnInit{
   appUser!: AppUser | null;
+  shoppingCartItemCount!:number;
+  cart = {} as ShoppingCart;
 
-  constructor(public auth : AuthService) {
+  constructor(public auth : AuthService, private cartSevice: ShoppingCartService) {
     auth.appUser.subscribe(user =>   this.appUser = user);
   }
+
+  async ngOnInit() {
+     const query = await this.cartSevice.getCart()
+
+     onSnapshot(query, (querySnapshot) =>{
+        this.shoppingCartItemCount = 0;
+            querySnapshot.forEach((doc) =>{
+                let d = doc.data();
+                this.shoppingCartItemCount += d?.['quantity'];
+            })
+     } )
+  }
+
   
   logout(){
    this.auth.logout();
