@@ -42,7 +42,7 @@ export class AuthService {
 
                 let returnUrl = localStorage.getItem("returnUrl") || '/';
                 this.router.navigateByUrl(returnUrl);
-                console.log(returnUrl);
+                // console.log(returnUrl);
                 this.userService.save(user);
             }
         });
